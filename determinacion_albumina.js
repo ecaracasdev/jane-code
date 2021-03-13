@@ -37,16 +37,21 @@ const lineReader = require('line-reader')
 const { isEmpty } = require('lodash')
 let file_name
 
+let processParams = {
+  temperatura: process.argv[2] || ''
+}
+
 const main = async () => {
 
   let txtFiles = glob.sync( 'BSA_SIN_CORREGIR/*.txt' , {  nocase: true })
-  
-  let txtFilePath = txtFiles[0]
+
+  if (!fs.existsSync( 'BSA_CORREGIDOS/'+  processParams.temperatura )) fs.mkdirSync('BSA_CORREGIDOS/'+  processParams.temperatura  )
 
   for (const txt of txtFiles) {
     file_name = txt.replace('BSA_SIN_CORREGIR/','')
-    const txtData = await getTxtData(txtFilePath)
-    fs.writeFileSync('BSA_CORREGIDOS/'+file_name, txtData)
+    let txtData = await getTxtData(txt)
+    fs.writeFileSync('BSA_CORREGIDOS/'+ processParams.temperatura + '/' + file_name, txtData)
+    fs.unlinkSync(txt)
   }
 
   return ['hola']

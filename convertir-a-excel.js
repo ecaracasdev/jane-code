@@ -51,15 +51,13 @@ const main = async () => {
   
   for (const dptFile of dptFiles) {
     file_name = dptFile.replace('ARCHIVOS_DPT/','')
-    console.log('file_name: ', file_name)
     let dptData = await getDptData(dptFile)
-    console.log('dptData: ', dptData)
     let wbDPT = await getWorkBookExcelJS('TEMPLATES/longitud_de_onda_vs_intensidad_template.xlsx')
     let wsDPT = getWorksheetByIndex(wbDPT, 0)
     wsDPT = procesarData(wsDPT, dptData)
     await wbDPT.xlsx.writeFile( excelPath+ '/' + file_name + '.xlsx')
 
-    //fs.unlinkSync(dptFile)
+    fs.unlinkSync(dptFile)
   }
 
   process.exit()
